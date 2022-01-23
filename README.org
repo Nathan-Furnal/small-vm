@@ -1,2 +1,41 @@
-* Memory
-* Registers
+* Introduction
+
+The repository contains my =C= implementation of the [[https://justinmeiners.github.io/lc3-vm/][write your own VM]]
+course. The =README= will mainly contain useful notes I can read to look back at
+this project and more material if I feel the need for it.
+
+* Implementation details
+
+** Memory
+
+2^16 memory locations, each storing a 16-bit value. Stored in an array. 
+
+** Registers
+
+10 total registers, 16 bits each. 8 general purpose, 1 program counter and 1
+condition flags. Stored in an array. 
+
+*** Conditions flags
+
+The =R_COND= register stores condition flags with information about calculation
+(positive, zero, negative). 
+
+** Instruction set
+
+An instruction is a command, made up of an *opcode* which indicates the task to
+perform and a set of *parameters* which provides inputs. There are 16 opcodes in
+LC-3. Each instruction is 16 bits long, the left 4 bits store the opcode and the
+rest of the bits are for the parameters. 
+
+** Implementing instructions
+
+* How to read the files?
+
+I think there is a "useful" way to read the source files to understand what's
+going on and I'd start with the order laid out below.
+
+| *File* | *Content*                                                            |
+|--------+----------------------------------------------------------------------|
+| =vm.h= | VM building blocks, contains the memory and registers implementation |
+|        |                                                                      |
+

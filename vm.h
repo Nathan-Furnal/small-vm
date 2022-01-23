@@ -55,4 +55,8 @@ typedef enum {
   FL_ZRO = 1 << 1, /* Z */
   FL_NEG = 1 << 2, /* N */
 } c_flags;
+
+/* Starting default position */
+
+typedef enum { PC_START = 0x3000 } start_position;
 #endif
