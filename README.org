@@ -46,10 +46,9 @@ Finally, there are only 5 bits allowed for the immediate value, up to =2^5=32=
 
 I think there is a "useful" way to read the source files to understand what's
 going on and I'd start with the order laid out below.
-|--------+----------------------------------------------------------------------|
-| *File* | *Content*                                                            |
-|--------+----------------------------------------------------------------------|
-| =vm.h= | VM building blocks, contains the memory and registers implementation |
-|        | as well as the basic needed operations.                              |
-|--------+----------------------------------------------------------------------|
+|--------+--------------------------------------------------------------------------------------------------------------|
+| *File* | *Content*                                                                                                    |
+|--------+--------------------------------------------------------------------------------------------------------------|
+| =vm.h= | VM building blocks, contains the memory and registers implementation as well as the basic needed operations. |
+|--------+--------------------------------------------------------------------------------------------------------------|
 
