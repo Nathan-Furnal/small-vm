@@ -29,13 +29,27 @@ rest of the bits are for the parameters.
 
 ** Implementing instructions
 
+A specific instruction such as =ADD= or =AND= always has the same opcode since
+it defines it. But it can have different mixes of parameters, meaning that the
+output machine code for an instruction will differ depending on parameters. This
+is the case because an instruction such as =ADD= can take a destination register
+to store the result of a sum between two values stored in source registers or
+between a source register and an immediate value. We talk about /register/ mode
+when all the parameters are registers and /immediate/ mode if at least a
+parameter is an immediate value. Bit 5 of the instruction is set to 1 if
+/immediate/ mode is used, it is set to 0 otherwise.
+
+Finally, there are only 5 bits allowed for the immediate value, up to =2^5=32=
+(unsigned).
+
 * How to read the files?
 
 I think there is a "useful" way to read the source files to understand what's
 going on and I'd start with the order laid out below.
-
+|--------+----------------------------------------------------------------------|
 | *File* | *Content*                                                            |
 |--------+----------------------------------------------------------------------|
 | =vm.h= | VM building blocks, contains the memory and registers implementation |
-|        |                                                                      |
+|        | as well as the basic needed operations.                              |
+|--------+----------------------------------------------------------------------|
 
