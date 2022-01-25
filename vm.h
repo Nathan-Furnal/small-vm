@@ -68,28 +68,28 @@ typedef enum { PC_START = 0x3000 } start_position;
  * @param { int } bit_count : the bit from which the shift happens.
  * @return { uint16_t } the value after extension.
  */
-inline uint16_t sign_extend(uint16_t x, int bit_count) {
-  if ((x >> (bit_count - 1)) & 1) { // checks if the first bit of the right bit
-                                    // shifted value is 1
-    x |= (0xFFFF << bit_count); // updates value with left shift of max value
-  }
-  return x;
-}
+uint16_t sign_extend(uint16_t x, int bit_count);
 
 /*
  * Updates `R_COND` with the proper flag for a given register.
  *
  * @param { uint16_t } r : the index of a register.
  */
-inline void update_flags(uint16_t r) {
-  if (reg[r] == 0) {
-    reg[R_COND] = FL_ZRO;
-  }
-  // a 1 in the left-most bit indicates a negative value
-  else if (reg[r] >> 15) {
-    reg[R_COND] = FL_NEG;
-  } else {
-    reg[R_COND] = FL_POS;
-  }
-}
+void update_flags(uint16_t r);
+
+/*
+ * Implements the add operation. Adding can be done either between two registers
+ * or between a register and an immediate value.
+ *
+ * @param { uint16_t } instr : the input instruction.
+ */
+void op_add(uint16_t instr);
+
+/*
+ * Loads a value from a location in memory, into a register.
+ *
+ * @param { uint16_t } instr : the input instruction.
+ */
+void op_ldi(uint16_t instr);
+
 #endif
