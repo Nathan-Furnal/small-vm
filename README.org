@@ -2,7 +2,8 @@
 
 The repository contains my =C= implementation of the [[https://justinmeiners.github.io/lc3-vm/][write your own VM]]
 course. The =README= will mainly contain useful notes I can read to look back at
-this project and more material if I feel the need for it.
+this project and more material if I feel the need for it. I also re-ordered some
+of the points as it made more sense to me when I worked on the VM. 
 
 * Implementation details
 
@@ -42,6 +43,14 @@ parameter is an immediate value. Bit 5 of the instruction is set to 1 if
 Finally, there are only 5 bits allowed for the immediate value, up to =2^5=32=
 (unsigned).
 
+When implementing operations, bit shifting (=<<= or =>>=) is used to reach the
+proper register and boolean masking is applied to only get the relevant
+bits. For example, in the =ADD= operation, accessing the destination register
+which goes from bit 9 to 11 (3 bits wide) requires to right shift by 9 and apply
+a 3 bits boolean mask (=& 0x7=). 
+
+* Memory mapped registers
+
 * How to read the files?
 
 I think there is a "useful" way to read the source files to understand what's
@@ -50,5 +59,7 @@ going on and I'd start with the order laid out below.
 | *File* | *Content*                                                                                                    |
 |--------+--------------------------------------------------------------------------------------------------------------|
 | =vm.h= | VM building blocks, contains the memory and registers implementation as well as the basic needed operations. |
+|--------+--------------------------------------------------------------------------------------------------------------|
+| =vm.c= | Contains the implementation of the needed operations.                                                        |
 |--------+--------------------------------------------------------------------------------------------------------------|
 
