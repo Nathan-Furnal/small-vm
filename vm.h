@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+/* 65536 memory locations */
 extern uint16_t memory[UINT16_MAX];
 
 /* Registers,
@@ -24,6 +25,7 @@ typedef enum {
   R_COUNT
 } registers;
 
+/* Number of registers */
 extern uint16_t reg[R_COUNT];
 
 /* Define the 16 opcodes of the LC-3 */
