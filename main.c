@@ -1,5 +1,4 @@
 #include "vm.c"
-#include "vm.h"
 
 int main(int argc, char *argv[]) {
   /* Load arguments */
@@ -16,7 +15,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  /* Setup */
+  /* Setup, see utils.c */
   signal(SIGINT, handle_interrupt);
   disable_input_buffering();
   /* since exactly one condition flag should be set at any given time, set the Z
@@ -81,6 +80,7 @@ int main(int argc, char *argv[]) {
       break;
     }
   }
+  /* See utils.c */
   restore_input_buffering();
   return 0;
 }
