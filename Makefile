@@ -1,5 +1,13 @@
+CC = gcc
+CFLAGS = -Wall -pedantic -std=c11
+
+exec_files := *.o vm
+
+vm: main.o
+	$(CC) main.o -o vm
+	echo "VM is ready."
+
 main.o: main.c
-	cc -c main.c -o main.o
-	echo "Build complete!"
+	$(CC) $(CFLAGS) -c main.c -o main.o
 clean:
-	rm -f *.o
+	rm -rf $(exec_files)
