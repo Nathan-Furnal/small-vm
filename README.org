@@ -5,6 +5,24 @@ course. The =README= will mainly contain useful notes I can read to look back at
 this project and more material if I feel the need for it. I also re-ordered some
 of the points as it made more sense to me when I worked on the VM. 
 
+* Usage
+
+If you want to play around with this VM, as long as you have a Unix-like
+distribution, you can do the following :
+
+#+begin_src sh :exports code :eval no
+git clone https://github.com/Nathan-Furnal/small-vm
+#+end_src
+Then, go to the =small-vm= directory and do :
+#+begin_src sh :exports code :eval no
+make
+#+end_src
+Once this is done and you're still in the directory, you can play one of the
+games with :
+#+begin_src sh :exports code :eval no
+./vm games/2048.obj # or rogue.obj
+#+end_src
+
 * Implementation details
 
 ** Memory
