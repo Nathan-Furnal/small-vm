@@ -34,10 +34,10 @@ A specific instruction such as =ADD= or =AND= always has the same opcode since
 it defines it. But it can have different mixes of parameters, meaning that the
 output machine code for an instruction will differ depending on parameters. This
 is the case because an instruction such as =ADD= can take a destination register
-to store the result of a sum between two values stored in source registers or
-between a source register and an immediate value. We talk about /register/ mode
-when all the parameters are registers and /immediate/ mode if at least a
-parameter is an immediate value. Bit 5 of the instruction is set to 1 if
+(=DR=) to store the result of a sum between two values stored in source
+registers or between a source register and an immediate value. We talk about
+/register/ mode when all the parameters are registers and /immediate/ mode if at
+least a parameter is an immediate value. Bit 5 of the instruction is set to 1 if
 /immediate/ mode is used, it is set to 0 otherwise.
 
 Finally, there are only 5 bits allowed for the immediate value, up to =2^5=32=
@@ -45,11 +45,130 @@ Finally, there are only 5 bits allowed for the immediate value, up to =2^5=32=
 
 When implementing operations, bit shifting (=<<= or =>>=) is used to reach the
 proper register and boolean masking is applied to only get the relevant
-bits. For example, in the =ADD= operation, accessing the destination register
+bits. For example, in the =ADD= operation, accessing the destination register (=DR=)
 which goes from bit 9 to 11 (3 bits wide) requires to right shift by 9 and apply
 a 3 bits boolean mask (=& 0x7=). 
 
+** Instructions details
+
+*** =ADD=
+
+The addition operation. If =bit 5= is 1, the immediate value is sign extended to
+16 bits. In both cases, the source register content and the second operand (the
+content of another register or an immediate value) are added and the result is
+stored in the destination register.
+
+*** =RTI= & =RES=
+
+Both these operations are not used here (thus not implemented).
+
+*** =AND=
+
+The bit-wise logical =AND=, it works in exactly the same way as =ADD= but stores
+the result of the bit-wise =AND= in the destination register.
+
+*** =NOT=
+
+The bit-wise complement, it takes a source directory and stores its bit-wise
+complement in the destination directory.
+
+*** =BR= (Branch)
+
+The conditional branching operation. It tests the sign bits [11:9], if any of
+the condition code tested is set, the program branches to the location specified
+by the sign extended offset. Meaning that it increases the program counter
+(=PC=) which is a 16-bit register containing the address of the next
+instruction. 
+
+*** =JMP= (Jump) and =RET= (return from subroutine)
+
+The unconditional branching operation. Unconditionally jumps to the location
+specified by the location of the base register. =RET= is a special case of
+=JMP=, which jumps to =R7=. The content of the register is copied into =PC= in
+either case. 
+
+*** =JSR= (Jump to subroutine) and =JSRR= (Jump to register)
+
+First, the value incremented =PC= is saved in =R7=. This is the linkage back to
+the calling routine. Then the program counter is loaded with the address of the
+first instruction of the subroutine, causing an unconditional jump to that
+address. The address of that subroutine is obtained from the base register if
+bit 11 is 0 or the address computed by sign-extending bits [10:0] and adding
+this value to the incremented =PC=. 
+
+*** =LD= (Load)
+
+Loads the content from the given memory address in parameter to the destination
+register, the condition codes are updated afterwards.
+
+*** =LDI= (Load indirect)
+
+This is works like a pointer in =C=. An address is computed by sign-extending
+bits [8:0] to 16 bits and adding this value to the incremented =PC=. What is
+stored at this address is the address of the data to be loaded into the
+destination register. The condition codes are set afterwards. 
+
+*** =LDR= (Load base + offset)
+
+An address is computed by sign-extending bits [5:0] to 16 bits and adding this
+value to the contents of the register specified by bits [8:6]. The contents of
+memory at this address are loaded into =DR=. The condition codes are set, based on
+whether the value loaded is negative, zero, or positive.
+
+*** =LEA= (Load effective address)
+
+An address is computed by sign-extending bits [8:0] to 16 bits and adding this
+value to the incremented PC. This address is loaded into =DR=. The condition codes
+are set, based on whether the value loaded is negative, zero, or positive.
+
+*** =ST= (Store)
+
+Stores the content of the source register into the memory at the program
+counter + a sign-extended offset. 
+
+*** =STI= (Store indirect)
+
+Stores the content of the source register (=SR=) into the memory address
+specified by the memory address given the program counter + a sign-extended
+offset. This is similar to indirection in =C=.
+
+*** =STR= (Store register)
+
+The contents of the register specified by =SR= are stored in the memory location
+whose address is computed by sign-extending bits [5:0] to 16 bits and adding
+this value to the contents of the register specified by bits [8:6].
+
+*** Trap Routines
+
+The =LC-3= provides a few predefined routines for performing common tasks and
+interacting with I/O devices. For example, there are routines for getting input
+from the keyboard and for displaying strings to the console. These are called
+trap routines which you can think of as the operating system or API for the
+=LC-3=. Each trap routine is assigned a trap code which identifies it (similar
+to an opcode). To execute one, the =TRAP= instruction is called with the trap
+code of the desired routine.
+
+Those are not new instructions but conveniences similar to system calls. When a
+trap code is called, the =PC= is moved to that code's address. 
+
 * Memory mapped registers
+
+Some special registers are not accessible from the normal register
+table. Instead, a special address is reserved for them in memory. To read and
+write to these registers, you read and write to their memory location. These are
+called *memory* *mapped* *registers*. They are used to interact with special
+hardware devices.
+
+The LC-3 has two memory mapped registers that need to be implemented. They are
+the keyboard status register (=KBSR=) and keyboard data register (=KBDR=). The
+=KBSR= indicates whether a key has been pressed and the =KDBR= identifies which
+key was pressed.
+
+Although you can request keyboard input using =GETC=, this blocks execution
+until input is received. =KBSR= and =KBDR= allows you to poll the state of the
+device and continue execution, so the program can stay responsive while waiting
+for input.
+
 
 * How to read the files?
 
