@@ -1,3 +1,8 @@
+/*
+ * Functions in this file are provided as is to help starting and ending the
+ * main application loop.
+ */
+
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
