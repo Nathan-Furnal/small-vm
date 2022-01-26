@@ -2,16 +2,9 @@
  * Functions in this file are provided as is to help starting and ending the
  * main application loop.
  */
+#include "utils.h"
 
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/select.h>
-#include <termios.h>
-#include <unistd.h>
-
-/// Utilities to read frpm the keyboard ///
+/// Utilities to read from the keyboard ///
 
 uint16_t check_key() {
   fd_set readfds;

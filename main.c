@@ -1,4 +1,5 @@
-#include "vm.c"
+#include "vm.h"
+#include "utils.h"
 
 int main(int argc, char *argv[]) {
   /* Load arguments */

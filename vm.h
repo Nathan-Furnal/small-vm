@@ -1,9 +1,9 @@
 #ifndef VM_H
 #define VM_H
 #include <stdint.h>
+#include <stdio.h>
 
-/* 65536 memory locations */
-static uint16_t memory[UINT16_MAX];
+extern uint16_t memory[UINT16_MAX];
 
 /* Registers,
  * 8 general purpose (R0-R7)
@@ -24,8 +24,7 @@ typedef enum {
   R_COUNT
 } registers;
 
-/* Number of registers */
-static uint16_t reg[R_COUNT];
+extern uint16_t reg[R_COUNT];
 
 /* Define the 16 opcodes of the LC-3 */
 typedef enum {
@@ -165,4 +164,14 @@ void trap_in();
 void trap_putsp();
 
 void trap_halt();
+
+/* Ties all trap calls together */
+void switch_trap(uint16_t instr);
+
+/* I/O utilities */
+
+uint16_t swap16(uint16_t x);
+void read_image_file(FILE *file);
+int read_image(const char *image_path);
+
 #endif

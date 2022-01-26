@@ -1,5 +1,11 @@
 #include "vm.h"
-#include "utils.c" // reading keyboard input
+#include "utils.h" // reading keyboard input
+
+/* 65536 memory locations */
+uint16_t memory[UINT16_MAX];
+
+/* Number of registers */
+uint16_t reg[R_COUNT];
 
 void mem_write(uint16_t address, uint16_t val) { memory[address] = val; }
 
