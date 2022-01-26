@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 /* 65536 memory locations */
-extern uint16_t memory[UINT16_MAX];
+static uint16_t memory[UINT16_MAX];
 
 /* Registers,
  * 8 general purpose (R0-R7)
@@ -25,7 +25,7 @@ typedef enum {
 } registers;
 
 /* Number of registers */
-extern uint16_t reg[R_COUNT];
+static uint16_t reg[R_COUNT];
 
 /* Define the 16 opcodes of the LC-3 */
 typedef enum {
@@ -54,8 +54,34 @@ typedef enum {
   FL_NEG = 1 << 2, /* N */
 } c_flags;
 
-/* Starting default position */
+/*
+ * Starting default position. Does not start at 0x0 because anything between 0x0
+ * and 0x3000 are addresses left empty to leave space for trap routine code.
+ */
 typedef enum { PC_START = 0x3000 } start_position;
+
+/* Memory mapped registers */
+typedef enum {
+  MR_KBSR = 0xFE00, /* keyboard status */
+  MR_KBDR = 0xFE02  /* keyboard data */
+} mmap_registers;
+
+/*
+ * Writes a value at a given memory address, overwrites any existing value.
+ *
+ * @param { uint16_t } address : the address to write at.
+ */
+void mem_write(uint16_t address, uint16_t val);
+
+/*
+ * Reads a value at a given memory address. Checks if a memory mapped register
+ * is used and gets the data if it's the case. Returns the value at the given
+ * memory address in any case.
+ *
+ * @param { uint16_t } address : the memory address the read from.
+ * @return { uint16_t } the value at the given address.
+ */
+uint16_t mem_read(uint16_t address);
 
 /*
  * Extends the sign of an unsigned integer. Checks if a bit has value 1 after
@@ -86,10 +112,57 @@ void update_flags(uint16_t r);
 void op_add(uint16_t instr);
 
 /*
- * Loads a value from a location in memory, into a register.
+ * Loads a value from a location in memory, into a register. Can be seen as an
+ * access to far data since it loads a place in memory that points to a
+ * different place in memory.
  *
  * @param { uint16_t } instr : the input instruction.
  */
 void op_ldi(uint16_t instr);
 
+void op_and(uint16_t instr);
+
+void op_not(uint16_t instr);
+
+void op_br(uint16_t instr);
+
+void op_jmp(uint16_t instr);
+
+void op_jsr(uint16_t instr);
+
+void op_ld(uint16_t instr);
+
+void op_ldr(uint16_t instr);
+
+void op_lea(uint16_t instr);
+
+void op_st(uint16_t instr);
+
+void op_sti(uint16_t instr);
+
+void op_str(uint16_t instr);
+
+void op_trap(uint16_t instr);
+
+typedef enum {
+  TRAP_GETC =
+      0x20, /* get character from keyboard, not echoed onto the terminal */
+  TRAP_OUT = 0x21,   /* output a character */
+  TRAP_PUTS = 0x22,  /* output a word string */
+  TRAP_IN = 0x23,    /* get character from keyboard, echoed onto the terminal */
+  TRAP_PUTSP = 0x24, /* output a byte string */
+  TRAP_HALT = 0x25   /* halt the program */
+} trap_codes;
+
+void trap_puts();
+
+void trap_getc();
+
+void trap_out();
+
+void trap_in();
+
+void trap_putsp();
+
+void trap_halt();
 #endif
