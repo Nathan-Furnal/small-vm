@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,7 +6,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-/// Utilities ///
+/// Utilities to read frpm the keyboard ///
 
 uint16_t check_key() {
   fd_set readfds;
@@ -36,5 +37,3 @@ void handle_interrupt(int signal) {
   printf("\n");
   exit(-2);
 }
-
-
