@@ -169,11 +169,11 @@ until input is received. =KBSR= and =KBDR= allows you to poll the state of the
 device and continue execution, so the program can stay responsive while waiting
 for input.
 
-
 * How to read the files?
 
 I think there is a "useful" way to read the source files to understand what's
-going on and I'd start with the order laid out below.
+going on and I'd start with the order laid out below. Additional comments and
+documentation can be found in the files.
 |----------+--------------------------------------------------------------------------------------------------------------|
 | *File*   | *Content*                                                                                                    |
 |----------+--------------------------------------------------------------------------------------------------------------|
